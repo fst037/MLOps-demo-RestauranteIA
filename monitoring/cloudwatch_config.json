@@ -1,0 +1,94 @@
+{
+  "namespace": "BistroTech",
+  "alarms": [
+    {
+      "AlarmName": "BistroTech-ModelDrift-Severe",
+      "AlarmDescription": "PSI supera umbral de drift severo (0.20) — evaluar reentrenamiento inmediato",
+      "MetricName": "propina_rate_psi",
+      "Namespace": "BistroTech/ModelDrift",
+      "Statistic": "Maximum",
+      "Period": 3600,
+      "EvaluationPeriods": 1,
+      "Threshold": 0.20,
+      "ComparisonOperator": "GreaterThanOrEqualToThreshold",
+      "AlarmActions": [],
+      "Dimensions": [
+        {"Name": "Model", "Value": "BistroTech"},
+        {"Name": "Stage", "Value": "Production"}
+      ]
+    },
+    {
+      "AlarmName": "BistroTech-Latency-High",
+      "AlarmDescription": "Latencia p99 del endpoint supera 500ms",
+      "MetricName": "ModelLatency",
+      "Namespace": "AWS/SageMaker",
+      "ExtendedStatistic": "p99",
+      "Period": 300,
+      "EvaluationPeriods": 3,
+      "Threshold": 500,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "Dimensions": [
+        {"Name": "EndpointName", "Value": "bistrotech-endpoint-v1"},
+        {"Name": "VariantName", "Value": "primary"}
+      ]
+    },
+    {
+      "AlarmName": "BistroTech-Endpoint-Errors",
+      "AlarmDescription": "Tasa de errores 5xx supera 1% en los últimos 5 minutos",
+      "MetricName": "Invocation5XXErrors",
+      "Namespace": "AWS/SageMaker",
+      "Statistic": "Sum",
+      "Period": 300,
+      "EvaluationPeriods": 2,
+      "Threshold": 10,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "Dimensions": [
+        {"Name": "EndpointName", "Value": "bistrotech-endpoint-v1"},
+        {"Name": "VariantName", "Value": "primary"}
+      ]
+    },
+    {
+      "AlarmName": "BistroTech-RMSE-Degradation",
+      "AlarmDescription": "RMSE del modelo supera umbral de degradación",
+      "MetricName": "propina_rate_rmse",
+      "Namespace": "BistroTech/ModelMetrics",
+      "Statistic": "Average",
+      "Period": 86400,
+      "EvaluationPeriods": 1,
+      "Threshold": 0.08,
+      "ComparisonOperator": "GreaterThanThreshold",
+      "Dimensions": [
+        {"Name": "Model", "Value": "ModeloA"},
+        {"Name": "Stage", "Value": "Production"}
+      ]
+    }
+  ],
+  "dashboard": {
+    "DashboardName": "BistroTech-MLOps",
+    "widgets": [
+      {
+        "type": "metric",
+        "title": "Drift PSI — propina_rate",
+        "metrics": [["BistroTech/ModelDrift", "propina_rate_psi"]],
+        "period": 3600,
+        "stat": "Maximum"
+      },
+      {
+        "type": "metric",
+        "title": "Latencia Endpoint (p50 / p99)",
+        "metrics": [
+          ["AWS/SageMaker", "ModelLatency", "EndpointName", "bistrotech-endpoint-v1", {"stat": "p50"}],
+          ["AWS/SageMaker", "ModelLatency", "EndpointName", "bistrotech-endpoint-v1", {"stat": "p99"}]
+        ],
+        "period": 300
+      },
+      {
+        "type": "metric",
+        "title": "Invocaciones por minuto",
+        "metrics": [["AWS/SageMaker", "Invocations", "EndpointName", "bistrotech-endpoint-v1"]],
+        "period": 60,
+        "stat": "Sum"
+      }
+    ]
+  }
+}

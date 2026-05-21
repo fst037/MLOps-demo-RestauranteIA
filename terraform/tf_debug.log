@@ -1,0 +1,99 @@
+2026-05-20T22:41:19.567-0300 [INFO]  Terraform version: 1.15.4
+2026-05-20T22:41:19.568-0300 [DEBUG] using github.com/hashicorp/go-tfe v1.105.0
+2026-05-20T22:41:19.568-0300 [DEBUG] using github.com/hashicorp/hcl/v2 v2.24.0
+2026-05-20T22:41:19.568-0300 [DEBUG] using github.com/hashicorp/terraform-svchost v0.2.1
+2026-05-20T22:41:19.568-0300 [DEBUG] using github.com/zclconf/go-cty v1.18.0
+2026-05-20T22:41:19.568-0300 [INFO]  Go runtime version: go1.25.10
+2026-05-20T22:41:19.568-0300 [INFO]  CLI args: []string{"D:\\Program Files (x86)\\Terraform\\terraform.exe", "apply", "-auto-approve"}
+2026-05-20T22:41:19.571-0300 [DEBUG] Attempting to open CLI config file: C:\Users\santi\AppData\Roaming\terraform.rc
+2026-05-20T22:41:19.571-0300 [DEBUG] File doesn't exist, but doesn't need to. Ignoring.
+2026-05-20T22:41:19.572-0300 [DEBUG] ignoring non-existing provider search directory terraform.d/plugins
+2026-05-20T22:41:19.572-0300 [DEBUG] ignoring non-existing provider search directory C:\Users\santi\AppData\Roaming\terraform.d\plugins
+2026-05-20T22:41:19.573-0300 [DEBUG] ignoring non-existing provider search directory C:\Users\santi\AppData\Roaming\HashiCorp\Terraform\plugins
+2026-05-20T22:41:19.573-0300 [INFO]  CLI command args: []string{"apply", "-auto-approve"}
+2026-05-20T22:41:22.076-0300 [DEBUG] checking for provisioner in "."
+2026-05-20T22:41:22.076-0300 [DEBUG] checking for provisioner in "D:\\Program Files (x86)\\Terraform"
+2026-05-20T22:41:22.078-0300 [INFO]  backend/local: starting Apply operation
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.lambda_timeout_trigger" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "module.s3" references: [var.project_name local.account_id (expand)]
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "module.lambda" references: [var.lambda_timeout_deploy var.aws_region var.project_name var.improvement_threshold var.endpoint_name var.retrain_threshold var.lambda_timeout_trigger]
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "module.api_gateway" references: [var.project_name var.aws_region local.account_id (expand)]
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.lambda_timeout_deploy" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.aws_region" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.improvement_threshold" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "module.cloudwatch" references: [var.project_name var.endpoint_name var.aws_region]
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "module.sagemaker" references: [var.project_name var.endpoint_name var.sagemaker_instance_type]
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.retrain_threshold" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.endpoint_name" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "module.iam" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.kinesis_shard_count" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.project_name" references: []
+2026-05-20T22:41:22.085-0300 [DEBUG] ReferenceTransformer: "var.sagemaker_instance_type" references: []
+2026-05-20T22:41:22.086-0300 [DEBUG] ReferenceTransformer: "local.account_id (expand)" references: []
+2026-05-20T22:41:22.086-0300 [DEBUG] Starting graph walk: walkInit
+2026-05-20T22:41:22.086-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.086-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.087-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.087-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.089-0300 [DEBUG] ReferenceTransformer: "module.sagemaker.var.endpoint_name (expand)" references: []
+2026-05-20T22:41:22.089-0300 [DEBUG] ReferenceTransformer: "module.sagemaker.var.sagemaker_instance_type (expand)" references: []
+2026-05-20T22:41:22.089-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.089-0300 [DEBUG] ReferenceTransformer: "module.sagemaker.var.role_arn (expand)" references: []
+2026-05-20T22:41:22.089-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.089-0300 [DEBUG] ReferenceTransformer: "module.sagemaker.var.bucket_name (expand)" references: []
+2026-05-20T22:41:22.089-0300 [DEBUG] ReferenceTransformer: "module.sagemaker.var.project_name (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.endpoint_name (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.retrain_threshold (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.aws_region (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.role_arn (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.improvement_threshold (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.bucket_name (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.lambda_timeout_trigger (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.lambda_timeout_deploy (expand)" references: []
+2026-05-20T22:41:22.090-0300 [DEBUG] ReferenceTransformer: "module.lambda.var.project_name (expand)" references: []
+2026-05-20T22:41:22.090-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.090-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.091-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.091-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.092-0300 [DEBUG] ReferenceTransformer: "module.cloudwatch.var.project_name (expand)" references: []
+2026-05-20T22:41:22.092-0300 [DEBUG] ReferenceTransformer: "module.cloudwatch.var.endpoint_name (expand)" references: []
+2026-05-20T22:41:22.092-0300 [DEBUG] ReferenceTransformer: "module.cloudwatch.var.aws_region (expand)" references: []
+2026-05-20T22:41:22.092-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.092-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.094-0300 [DEBUG] ReferenceTransformer: "module.s3.var.account_id (expand)" references: []
+2026-05-20T22:41:22.094-0300 [DEBUG] ReferenceTransformer: "module.s3.var.project_name (expand)" references: []
+2026-05-20T22:41:22.094-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/archive to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/archive" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/archive"
+2026-05-20T22:41:22.094-0300 [WARN]  Error loading schema for registry.terraform.io/hashicorp/aws to determine its functions: failed to instantiate provider "registry.terraform.io/hashicorp/aws" to obtain schema: unavailable provider "registry.terraform.io/hashicorp/aws"
+2026-05-20T22:41:22.095-0300 [DEBUG] ReferenceTransformer: "module.api_gateway.var.project_name (expand)" references: []
+2026-05-20T22:41:22.095-0300 [DEBUG] ReferenceTransformer: "module.api_gateway.var.api_handler_arn (expand)" references: []
+2026-05-20T22:41:22.095-0300 [DEBUG] ReferenceTransformer: "module.api_gateway.var.api_handler_name (expand)" references: []
+2026-05-20T22:41:22.095-0300 [DEBUG] ReferenceTransformer: "module.api_gateway.var.aws_region (expand)" references: []
+2026-05-20T22:41:22.095-0300 [DEBUG] ReferenceTransformer: "module.api_gateway.var.account_id (expand)" references: []
+2026-05-20T22:41:22.096-0300 [DEBUG] created provider logger: level=debug
+2026-05-20T22:41:22.096-0300 [INFO]  provider: configuring client automatic mTLS
+2026-05-20T22:41:22.216-0300 [DEBUG] provider: starting plugin: path=.terraform/providers/registry.terraform.io/hashicorp/archive/2.8.0/windows_386/terraform-provider-archive_v2.8.0_x5.exe args=[".terraform/providers/registry.terraform.io/hashicorp/archive/2.8.0/windows_386/terraform-provider-archive_v2.8.0_x5.exe"]
+2026-05-20T22:41:22.221-0300 [DEBUG] provider: plugin started: path=.terraform/providers/registry.terraform.io/hashicorp/archive/2.8.0/windows_386/terraform-provider-archive_v2.8.0_x5.exe pid=13808
+2026-05-20T22:41:22.221-0300 [DEBUG] provider: waiting for RPC address: plugin=.terraform/providers/registry.terraform.io/hashicorp/archive/2.8.0/windows_386/terraform-provider-archive_v2.8.0_x5.exe
+2026-05-20T22:41:22.235-0300 [INFO]  provider.terraform-provider-archive_v2.8.0_x5.exe: configuring server automatic mTLS: timestamp=2026-05-20T22:41:22.234-0300
+2026-05-20T22:41:22.354-0300 [DEBUG] provider: using plugin: version=5
+2026-05-20T22:41:22.354-0300 [DEBUG] provider.terraform-provider-archive_v2.8.0_x5.exe: plugin address: network=tcp address=127.0.0.1:10000 timestamp=2026-05-20T22:41:22.354-0300
+2026-05-20T22:41:22.383-0300 [WARN]  provider.stdio: stdio service not available, stdout/stderr syncing unavailable
+2026-05-20T22:41:22.383-0300 [WARN]  provider.stdio: stdio service unavailable, run will do nothing
+2026-05-20T22:41:22.383-0300 [ERROR] plugin.(*GRPCProvider).GetProviderSchema: error="rpc error: code = Unavailable desc = connection error: desc = \"transport: authentication handshake failed: tls: failed to verify certificate: x509: certificate signed by unknown authority\""
+2026-05-20T22:41:24.383-0300 [WARN]  provider: plugin failed to exit gracefully
+2026-05-20T22:41:24.386-0300 [ERROR] provider: plugin process exited: plugin=.terraform/providers/registry.terraform.io/hashicorp/archive/2.8.0/windows_386/terraform-provider-archive_v2.8.0_x5.exe id=13808 error="exit status 1"
+2026-05-20T22:41:24.386-0300 [DEBUG] created provider logger: level=debug
+2026-05-20T22:41:24.386-0300 [INFO]  provider: configuring client automatic mTLS
+2026-05-20T22:41:24.431-0300 [DEBUG] provider: starting plugin: path=.terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_386/terraform-provider-aws_v5.100.0_x5.exe args=[".terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_386/terraform-provider-aws_v5.100.0_x5.exe"]
+2026-05-20T22:41:24.435-0300 [DEBUG] provider: plugin started: path=.terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_386/terraform-provider-aws_v5.100.0_x5.exe pid=5824
+2026-05-20T22:41:24.435-0300 [DEBUG] provider: waiting for RPC address: plugin=.terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_386/terraform-provider-aws_v5.100.0_x5.exe
+2026-05-20T22:41:24.527-0300 [DEBUG] provider.terraform-provider-aws_v5.100.0_x5.exe: Starting github.com/hashicorp/terraform-provider-aws@5.100.0 (go1.23.10)...
+2026-05-20T22:41:24.528-0300 [DEBUG] provider.terraform-provider-aws_v5.100.0_x5.exe: Initializing Terraform AWS Provider...
+2026-05-20T22:41:24.556-0300 [INFO]  provider.terraform-provider-aws_v5.100.0_x5.exe: configuring server automatic mTLS: timestamp=2026-05-20T22:41:24.554-0300
+2026-05-20T22:41:24.674-0300 [DEBUG] provider: using plugin: version=5
+2026-05-20T22:41:24.675-0300 [DEBUG] provider.terraform-provider-aws_v5.100.0_x5.exe: plugin address: address=127.0.0.1:10000 network=tcp timestamp=2026-05-20T22:41:24.674-0300
+2026-05-20T22:41:24.695-0300 [WARN]  provider.stdio: stdio service not available, stdout/stderr syncing unavailable
+2026-05-20T22:41:24.695-0300 [WARN]  provider.stdio: stdio service unavailable, run will do nothing
+2026-05-20T22:41:24.695-0300 [ERROR] plugin.(*GRPCProvider).GetProviderSchema: error="rpc error: code = Unavailable desc = connection error: desc = \"transport: authentication handshake failed: tls: failed to verify certificate: x509: certificate signed by unknown authority\""
+2026-05-20T22:41:26.695-0300 [WARN]  provider: plugin failed to exit gracefully
+2026-05-20T22:41:26.706-0300 [ERROR] provider: plugin process exited: plugin=.terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_386/terraform-provider-aws_v5.100.0_x5.exe id=5824 error="exit status 1"
