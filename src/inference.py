@@ -17,43 +17,6 @@ from src.feature_engineering import get_inference_features, load_processed
 
 logger = logging.getLogger(__name__)
 
-# ---------------------------------------------------------------------------
-# Compatibilidad de platos con restricciones dietarias
-# entradas: 1-8 | principales: 9-20 | postres: 21-25 | bebidas: 26-30
-# ---------------------------------------------------------------------------
-DISH_RESTRICTIONS: dict[int, list[str]] = {
-    1:  ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    2:  ["ninguna", "vegetariano", "celiaco", "kosher"],
-    3:  ["ninguna", "kosher"],
-    4:  ["ninguna", "kosher"],
-    5:  ["ninguna", "vegetariano", "vegano", "celiaco"],
-    6:  ["ninguna", "vegetariano", "vegano"],
-    7:  ["ninguna", "celiaco"],
-    8:  ["ninguna", "vegetariano"],
-    9:  ["ninguna", "kosher"],
-    10: ["ninguna", "kosher"],
-    11: ["ninguna"],
-    12: ["ninguna", "vegetariano", "celiaco"],
-    13: ["ninguna", "vegetariano", "vegano", "celiaco"],
-    14: ["ninguna", "celiaco"],
-    15: ["ninguna", "kosher"],
-    16: ["ninguna", "vegetariano"],
-    17: ["ninguna", "kosher"],
-    18: ["ninguna", "vegetariano", "vegano"],
-    19: ["ninguna", "vegetariano", "vegano", "celiaco"],
-    20: ["ninguna"],
-    21: ["ninguna", "vegetariano", "vegano", "celiaco"],
-    22: ["ninguna", "vegetariano"],
-    23: ["ninguna", "vegetariano", "celiaco"],
-    24: ["ninguna", "vegetariano"],
-    25: ["ninguna", "vegetariano", "vegano"],
-    26: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    27: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    28: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    29: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    30: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-}
-
 CURSO_DISH_RANGE: dict[str, range] = {
     "entrada":    range(1, 9),
     "principal":  range(9, 21),
@@ -156,16 +119,12 @@ def predict_mozo(comensales_features: list[dict]) -> list[dict]:
     return aggregate_mesa_scores(per_comensal_scores)
 
 
-def predict_menu(comensal_features: dict, restriccion: str = "ninguna") -> dict:
+def predict_menu(comensal_features: dict) -> dict:
     """
     Devuelve top 3 recomendaciones para cada curso (entrada/principal/postre/bebida).
 
-    Aplica filtro de restriccion_alimentaria: excluye platos incompatibles
-    con la dieta del comensal antes de rankear.
-
     Args:
         comensal_features: fila de X (pd.Series o dict de features transformadas).
-        restriccion: restriccion_alimentaria del comensal.
 
     Returns:
         dict {curso: [{'id_plato': int, 'score': float, 'rank': int}]}
@@ -191,13 +150,8 @@ def predict_menu(comensal_features: dict, restriccion: str = "ninguna") -> dict:
 
         proba = model_b.predict_proba(X_row)[0]
 
-        compatible_dishes = [
-            d for d in dish_range
-            if restriccion in DISH_RESTRICTIONS.get(d, ["ninguna"])
-        ]
-
         scored: list[tuple] = []
-        for dish_id in compatible_dishes:
+        for dish_id in dish_range:
             if dish_id in le.classes_:
                 encoded_idx = int(np.where(le.classes_ == dish_id)[0][0])
                 score = float(proba[encoded_idx])
@@ -245,9 +199,8 @@ def predict(contexto_mesa: dict) -> dict:
     recomendaciones: list[dict] = []
 
     for i, comensal in enumerate(comensales):
-        restriccion = comensal.get("restriccion_alimentaria", "ninguna")
         x_row = X_all.iloc[[i]]
-        menu = predict_menu(x_row, restriccion=restriccion)
+        menu = predict_menu(x_row)
         recomendaciones.append(
             {
                 "id_persona_en_mesa": comensal["id_persona_en_mesa"],
@@ -281,7 +234,7 @@ if __name__ == "__main__":
                 "franja_etaria_persona": "adulto",
                 "cant_acompañantes": 3,
                 "motivo_visita": "negocios",
-                "restriccion_alimentaria": "ninguna",
+
                 "es_repetidor": True,
                 "visitas_previas": 5,
                 "ticket_promedio_historico": 3200.0,
@@ -300,7 +253,7 @@ if __name__ == "__main__":
                 "franja_etaria_persona": ["joven", "joven", "adulto", "adulto"][i - 1],
                 "cant_acompañantes": 3,
                 "motivo_visita": "cumpleaños",
-                "restriccion_alimentaria": "ninguna",
+
                 "es_repetidor": i > 2,
                 "visitas_previas": (i - 2) * 3 if i > 2 else 0,
                 "ticket_promedio_historico": 2500.0 if i > 2 else None,
@@ -320,7 +273,7 @@ if __name__ == "__main__":
                 "franja_etaria_persona": "adulto",
                 "cant_acompañantes": 1,
                 "motivo_visita": "date",
-                "restriccion_alimentaria": "vegano",
+
                 "es_repetidor": False,
                 "visitas_previas": 0,
                 "ticket_promedio_historico": None,
@@ -331,7 +284,7 @@ if __name__ == "__main__":
                 "franja_etaria_persona": "adulto",
                 "cant_acompañantes": 1,
                 "motivo_visita": "date",
-                "restriccion_alimentaria": "ninguna",
+
                 "es_repetidor": True,
                 "visitas_previas": 8,
                 "ticket_promedio_historico": 4500.0,

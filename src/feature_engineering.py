@@ -5,6 +5,7 @@ X no contiene ninguna columna de feedback (anti-leakage).
 id_mozo no está en X porque no es conocido al momento de la inferencia
 para Modelo A (es lo que se recomienda); train_modelo_a lo agrega internamente.
 """
+import json
 import os
 import logging
 import numpy as np
@@ -33,7 +34,6 @@ CAT_FEATURES = {
     "franja_horaria": ["mediodia", "noche", "tarde"],
     "franja_etaria_persona": ["adulto", "joven", "senior"],
     "motivo_visita": ["casual", "cumpleaños", "date", "negocios", "turista"],
-    "restriccion_alimentaria": ["celiaco", "kosher", "ninguna", "vegano", "vegetariano"],
 }
 
 _preprocessor: dict | None = None
@@ -232,7 +232,6 @@ def get_inference_features(contexto: dict) -> pd.DataFrame:
                 "visitas_previas": c.get("visitas_previas", 0),
                 "ticket_promedio_historico": ticket,
                 "motivo_visita": c["motivo_visita"],
-                "restriccion_alimentaria": c.get("restriccion_alimentaria", "ninguna"),
                 "orden_de_pedido": c.get("orden_de_pedido", 1),
             }
         )
@@ -278,9 +277,28 @@ def get_inference_features(contexto: dict) -> pd.DataFrame:
     return result[expected_cols].reset_index(drop=True)
 
 
+def _preprocessor_to_json(preprocessor: dict) -> dict:
+    """Convierte el preprocessor (con objetos sklearn) a un dict JSON-serializable."""
+    scalers_json = {}
+    for name, scaler in preprocessor["scalers"].items():
+        scalers_json[name] = {
+            "data_min_": scaler.data_min_.tolist(),
+            "data_range_": scaler.data_range_.tolist(),
+        }
+    segment_means_json = {str(k): v for k, v in preprocessor["segment_means"].items()}
+    return {
+        "segment_means": segment_means_json,
+        "global_mean_ticket": preprocessor["global_mean_ticket"],
+        "feature_names": preprocessor["feature_names"],
+        "scalers": scalers_json,
+    }
+
+
 def save_processed(X: pd.DataFrame, targets: dict, path: str = "data/processed/") -> None:
     """
-    Persiste X, targets y el estado del preprocesador usando joblib.
+    Persiste X, targets y el estado del preprocesador usando joblib y JSON.
+
+    El JSON es usado por el container SageMaker (sagemaker_inference.py).
 
     Args:
         X: DataFrame de features (sin leakage).
@@ -292,6 +310,9 @@ def save_processed(X: pd.DataFrame, targets: dict, path: str = "data/processed/"
     joblib.dump(targets, os.path.join(path, "targets.joblib"))
     preprocessor = _get_preprocessor()
     joblib.dump(preprocessor, os.path.join(path, "preprocessor.joblib"))
+    preprocessor_json = _preprocessor_to_json(preprocessor)
+    with open(os.path.join(path, "preprocessor.json"), "w", encoding="utf-8") as f:
+        json.dump(preprocessor_json, f, ensure_ascii=False)
     logger.info("Datos procesados guardados en %s", path)
 
 

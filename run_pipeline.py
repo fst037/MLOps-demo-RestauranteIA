@@ -76,7 +76,7 @@ def step5_predict():
                     "franja_etaria_persona": "adulto",
                     "cant_acompañantes": 3,
                     "motivo_visita": "negocios",
-                    "restriccion_alimentaria": "ninguna",
+
                     "es_repetidor": True,
                     "visitas_previas": 5,
                     "ticket_promedio_historico": 3200.0,
@@ -94,7 +94,7 @@ def step5_predict():
                     "franja_etaria_persona": ["joven", "adulto", "adulto", "senior"][i - 1],
                     "cant_acompañantes": 3,
                     "motivo_visita": "cumpleaños",
-                    "restriccion_alimentaria": "ninguna",
+
                     "es_repetidor": i > 2,
                     "visitas_previas": 4 if i > 2 else 0,
                     "ticket_promedio_historico": 2500.0 if i > 2 else None,
@@ -113,7 +113,7 @@ def step5_predict():
                     "franja_etaria_persona": "adulto",
                     "cant_acompañantes": 1,
                     "motivo_visita": "date",
-                    "restriccion_alimentaria": "vegano",
+
                     "es_repetidor": False,
                     "visitas_previas": 0,
                     "ticket_promedio_historico": None,
@@ -124,7 +124,7 @@ def step5_predict():
                     "franja_etaria_persona": "adulto",
                     "cant_acompañantes": 1,
                     "motivo_visita": "date",
-                    "restriccion_alimentaria": "ninguna",
+
                     "es_repetidor": True,
                     "visitas_previas": 8,
                     "ticket_promedio_historico": 4500.0,
@@ -146,6 +146,14 @@ def step5_predict():
             f"| latencia={resultado['latencia_ms']}ms"
         )
     return casos
+
+
+def _export_native():
+    import importlib.util, sys
+    spec = importlib.util.spec_from_file_location("export_native", "infrastructure/export_native.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    print("[OK] Artefactos nativos exportados (.ubj, .json)")
 
 
 def simulate_minibatch_trigger():
@@ -179,6 +187,7 @@ def main():
     _step("2. Feature engineering", step2_features)
     _step("3. Entrenamiento Modelo A", step3_modelo_a)
     _step("4. Entrenamiento Modelos B", step4_modelo_b)
+    _step("4b. Exportar artefactos nativos (ubj/json)", _export_native)
     _step("5. Predicciones de prueba", step5_predict)
     _step("6. Simulación trigger mini-batch", simulate_minibatch_trigger)
 

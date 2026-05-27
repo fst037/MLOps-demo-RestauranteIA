@@ -17,43 +17,9 @@ import xgboost as xgb
 logger = logging.getLogger(__name__)
 
 CAT_FEATURES = {
-    "franja_horaria":          ["mediodia", "noche", "tarde"],
-    "franja_etaria_persona":   ["adulto", "joven", "senior"],
-    "motivo_visita":           ["casual", "cumpleaños", "date", "negocios", "turista"],
-    "restriccion_alimentaria": ["celiaco", "kosher", "ninguna", "vegano", "vegetariano"],
-}
-
-DISH_RESTRICTIONS: dict = {
-    1:  ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    2:  ["ninguna", "vegetariano", "celiaco", "kosher"],
-    3:  ["ninguna", "kosher"],
-    4:  ["ninguna", "kosher"],
-    5:  ["ninguna", "vegetariano", "vegano", "celiaco"],
-    6:  ["ninguna", "vegetariano", "vegano"],
-    7:  ["ninguna", "celiaco"],
-    8:  ["ninguna", "vegetariano"],
-    9:  ["ninguna", "kosher"],
-    10: ["ninguna", "kosher"],
-    11: ["ninguna"],
-    12: ["ninguna", "vegetariano", "celiaco"],
-    13: ["ninguna", "vegetariano", "vegano", "celiaco"],
-    14: ["ninguna", "celiaco"],
-    15: ["ninguna", "kosher"],
-    16: ["ninguna", "vegetariano"],
-    17: ["ninguna", "kosher"],
-    18: ["ninguna", "vegetariano", "vegano"],
-    19: ["ninguna", "vegetariano", "vegano", "celiaco"],
-    20: ["ninguna"],
-    21: ["ninguna", "vegetariano", "vegano", "celiaco"],
-    22: ["ninguna", "vegetariano"],
-    23: ["ninguna", "vegetariano", "celiaco"],
-    24: ["ninguna", "vegetariano"],
-    25: ["ninguna", "vegetariano", "vegano"],
-    26: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    27: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    28: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    29: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
-    30: ["ninguna", "vegetariano", "vegano", "celiaco", "kosher"],
+    "franja_horaria":        ["mediodia", "noche", "tarde"],
+    "franja_etaria_persona": ["adulto", "joven", "senior"],
+    "motivo_visita":         ["casual", "cumpleaños", "date", "negocios", "turista"],
 }
 
 CURSO_DISH_RANGE: dict = {
@@ -140,9 +106,8 @@ def _build_features(contexto: dict, preprocessor: dict) -> pd.DataFrame:
             "es_repetidor":            int(bool(c["es_repetidor"])),
             "visitas_previas_raw":     float(c.get("visitas_previas", 0)),
             "ticket_raw":              float(ticket),
-            "motivo_visita":           c["motivo_visita"],
-            "restriccion_alimentaria": c.get("restriccion_alimentaria", "ninguna"),
-            "orden_de_pedido_raw":     float(c.get("orden_de_pedido", 1)),
+            "motivo_visita":       c["motivo_visita"],
+            "orden_de_pedido_raw": float(c.get("orden_de_pedido", 1)),
         })
 
     result = pd.DataFrame(index=range(len(rows)))
@@ -222,7 +187,6 @@ def predict_fn(contexto: dict, models: dict) -> dict:
     # --- Modelo B: menu recommendations ---
     recomendaciones: list = []
     for i, comensal in enumerate(comensales):
-        restriccion = comensal.get("restriccion_alimentaria", "ninguna")
         x_row = X_all.iloc[[i]]
         menu: dict = {}
 
@@ -239,9 +203,8 @@ def predict_fn(contexto: dict, models: dict) -> dict:
             elif proba.ndim == 1 and len(proba) > len(le_classes):
                 proba = proba.reshape(-1, len(le_classes))[0]
 
-            compatible = [d for d in dish_range if restriccion in DISH_RESTRICTIONS.get(d, [])]
             scored = []
-            for dish_id in compatible:
+            for dish_id in dish_range:
                 if dish_id in le_classes:
                     idx = le_classes.index(dish_id)
                     scored.append((dish_id, float(proba[idx])))

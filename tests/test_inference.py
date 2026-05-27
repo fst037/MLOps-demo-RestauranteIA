@@ -17,7 +17,7 @@ import joblib
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from src.inference import DISH_RESTRICTIONS, predict_menu, predict
+from src.inference import CURSO_DISH_RANGE, predict_menu, predict
 from src.feature_engineering import build_features, get_inference_features, load_processed, save_processed
 from src.generate_dataset import generate
 
@@ -84,7 +84,7 @@ def minimal_pipeline(tmp_path_factory):
     os.chdir(original_cwd)
 
 
-def _make_context(mesa_id: int = 1, restriccion: str = "ninguna") -> dict:
+def _make_context(mesa_id: int = 1) -> dict:
     return {
         "id_mesa": mesa_id,
         "comensales": [
@@ -93,7 +93,6 @@ def _make_context(mesa_id: int = 1, restriccion: str = "ninguna") -> dict:
                 "franja_etaria_persona": "adulto",
                 "cant_acompañantes": 1,
                 "motivo_visita": "casual",
-                "restriccion_alimentaria": restriccion,
                 "es_repetidor": True,
                 "visitas_previas": 3,
                 "ticket_promedio_historico": 2000.0,
@@ -160,42 +159,28 @@ def test_predict_output_format(minimal_pipeline):
     assert isinstance(resultado["latencia_ms"], int), "'latencia_ms' debe ser int."
 
 
-def test_no_incompatible_recommendations(minimal_pipeline):
+def test_recommended_dishes_in_correct_course_range(minimal_pipeline):
     """
-    Un comensal vegano no debe recibir recomendaciones de platos incompatibles.
+    Cada plato recomendado debe pertenecer al rango de IDs de su curso.
 
-    Verifica que el filtro de restriccion_alimentaria funciona: ningún plato
-    recomendado debe tener 'vegano' ausente de su lista de compatibilidad.
+    Verifica la integridad del output: entradas 1-8, principales 9-20,
+    postres 21-25, bebidas 26-30.
     """
     os.chdir(minimal_pipeline)
     import src.inference as inf_mod
     inf_mod._models = None
 
     load_processed(path="data/processed/")
-    models = inf_mod.load_models()
 
-    contexto_vegano = _make_context(mesa_id=10, restriccion="vegano")
-    X_inf = get_inference_features(contexto_vegano)
+    contexto = _make_context(mesa_id=10)
+    X_inf = get_inference_features(contexto)
 
-    vegano_row = X_inf.iloc[[0]]
-    menu = predict_menu(vegano_row, restriccion="vegano")
+    menu = predict_menu(X_inf.iloc[[0]])
 
     for curso, recomendaciones in menu.items():
+        valid_ids = set(CURSO_DISH_RANGE[curso])
         for rec in recomendaciones:
-            dish_id = rec["id_plato"]
-            compatible = DISH_RESTRICTIONS.get(dish_id, [])
-            assert "vegano" in compatible, (
-                f"Plato {dish_id} ({curso}) recomendado a vegano pero no es compatible. "
-                f"Restricciones del plato: {compatible}"
-            )
-
-    no_vegano_dishes = {
-        dish_id for dish_id, restrictions in DISH_RESTRICTIONS.items()
-        if "vegano" not in restrictions
-    }
-    for curso, recomendaciones in menu.items():
-        for rec in recomendaciones:
-            assert rec["id_plato"] not in no_vegano_dishes, (
-                f"Plato con carne/lácteos/huevos #{rec['id_plato']} "
-                f"recomendado a un comensal vegano en curso '{curso}'."
+            assert rec["id_plato"] in valid_ids, (
+                f"Plato #{rec['id_plato']} recomendado en '{curso}' "
+                f"pero su ID no pertenece al rango {min(valid_ids)}-{max(valid_ids)}."
             )
